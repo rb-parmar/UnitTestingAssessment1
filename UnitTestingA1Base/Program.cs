@@ -193,14 +193,14 @@ app.MapDelete("/ingredients", (int? id, string? name) =>
 {
     try
     {
-        string message = bll.DeleteIngredient(id, name);
+        string? message = bll.DeleteIngredient(id, name);
 
-        if (message != null)
-        {
-            throw new Exception(message);
-        } else
+        if (string.IsNullOrEmpty(message))
         {
             return Results.Ok("Ingredient deleted successfully.");
+        } else
+        {
+            throw new Exception(message);
         }
 
     } catch (Exception ex) 

@@ -196,9 +196,9 @@ namespace UnitTestingA1Base.Data
             return recipes;
         }
 
-        public string DeleteIngredient(int? id, string? name)
+        public string? DeleteIngredient(int? id, string? name)
         {
-            string message = "";
+            string? message = null;
             Ingredient ingredient;
 
             // search using id and name not provided
@@ -239,9 +239,9 @@ namespace UnitTestingA1Base.Data
         }
 
         // Helper method to delete associated recipes, recipeIngredients and ingredient
-        public string DeleteIngredientHelperMethod(Ingredient ingredient)
+        public string? DeleteIngredientHelperMethod(Ingredient ingredient)
         {
-            string msg = "";
+            string? msg = null;
 
             HashSet<RecipeIngredient> recipeIngredients = _appStorage.RecipeIngredients.Where(ri => ri.IngredientId == ingredient.Id).ToHashSet();
 
