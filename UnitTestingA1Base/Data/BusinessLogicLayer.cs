@@ -25,9 +25,7 @@ namespace UnitTestingA1Base.Data
                     return new HashSet<Recipe>();
                 }
 
-                HashSet<RecipeIngredient> recipeIngredients = _appStorage.RecipeIngredients.Where(rI => rI.IngredientId == ingredient.Id).ToHashSet();
-
-                recipes = _appStorage.Recipes.Where(r => recipeIngredients.Any(ri => ri.RecipeId == r.Id)).ToHashSet();
+                recipes = FilterRecipesByIngredient(ingredient);
             }
 
             // search using name and ID not provided
@@ -41,9 +39,7 @@ namespace UnitTestingA1Base.Data
                     return new HashSet<Recipe>();
                 }
 
-                HashSet<RecipeIngredient> recipeIngredients = _appStorage.RecipeIngredients.Where(rI => rI.IngredientId == ingredient.Id).ToHashSet();
-
-                recipes = _appStorage.Recipes.Where(r => recipeIngredients.Any(ri => ri.RecipeId == r.Id)).ToHashSet();
+                recipes = FilterRecipesByIngredient(ingredient);
             }
 
             // search using both ID and name
@@ -62,12 +58,107 @@ namespace UnitTestingA1Base.Data
                     return new HashSet<Recipe>();
                 }
 
-                HashSet<RecipeIngredient> recipeIngredients = _appStorage.RecipeIngredients.Where(rI => rI.IngredientId == ingredient.Id).ToHashSet();
-
-                recipes = _appStorage.Recipes.Where(r => recipeIngredients.Any(ri => ri.RecipeId == r.Id)).ToHashSet();
+                recipes = FilterRecipesByIngredient(ingredient);
             }
 
             return recipes;
+        }
+
+        // helper method to filter out recipes if they do not contain the provided ingredient
+        public HashSet<Recipe> FilterRecipesByIngredient(Ingredient ingredient)
+        {
+            HashSet<RecipeIngredient> recipeIngredients = _appStorage.RecipeIngredients.Where(rI => rI.IngredientId == ingredient.Id).ToHashSet();
+
+            return _appStorage.Recipes.Where(r => recipeIngredients.Any(ri => ri.RecipeId == r.Id)).ToHashSet();
+        }
+
+        public HashSet<Recipe> GetRecipesByDiet(int? id, string? name)
+        {
+            DietaryRestriction dietaryRestriction;
+            HashSet<Recipe> recipes = new HashSet<Recipe>();
+
+            // search using ID and name not provided
+            if (id != null && name == null)
+            {
+                dietaryRestriction = _appStorage.DietaryRestrictions.First(i => i.Id == id);
+
+                if (dietaryRestriction == null)
+                {
+                    return new HashSet<Recipe>();
+                }
+
+                recipes = FilterRecipesByDiet(dietaryRestriction);
+            }
+
+            // search using ID and name not provided
+            if (name != null && id == null)
+            {
+                dietaryRestriction = _appStorage.DietaryRestrictions.First(i => i.Name.Contains(name));
+
+                if (dietaryRestriction == null)
+                {
+                    return new HashSet<Recipe>();
+                }
+
+                recipes = FilterRecipesByDiet(dietaryRestriction);
+            }
+
+            // search using both ID and name
+            if (id != null && name != null) 
+            {
+                dietaryRestriction = _appStorage.DietaryRestrictions.First(d => d.Id == id);
+                
+                // if dietaryRestriction searched by id returned null, then search by name
+                if (dietaryRestriction == null)
+                {
+                    dietaryRestriction = _appStorage.DietaryRestrictions.First(d => d.Name.Contains(name));
+
+                    // if the dietaryRestriction searched by name returned null, then return a new hashset of recipes which will return a NotFound error.
+                } if (dietaryRestriction == null) 
+                {
+                    return new HashSet<Recipe>();
+                }
+
+                recipes = FilterRecipesByDiet(dietaryRestriction);
+            }
+
+            return recipes;
+        }
+
+        // helper method to filter out recipes that contain an ingredient in a certain dietary restriction 
+        public HashSet<Recipe> FilterRecipesByDiet(DietaryRestriction dietaryRestriction)
+        {
+            HashSet<Recipe> filteredRecipes = new HashSet<Recipe>();
+
+            // Find ingredients that belong to a certain dietary restriction
+            HashSet<IngredientRestriction> ingredientRestrictions = _appStorage.IngredientRestrictions.Where(ir => ir.DietaryRestrictionId == dietaryRestriction.Id).ToHashSet();
+
+            HashSet<RecipeIngredient> recipeIngredients = new HashSet<RecipeIngredient>();
+
+            HashSet<RecipeIngredient> RecipesInDb = _appStorage.RecipeIngredients;
+
+            // iterate over every recipie
+            foreach (IngredientRestriction IR in ingredientRestrictions)
+            {
+                // set an ingredient that matched the ingredientId of the IR
+                Ingredient ingredient = _appStorage.Ingredients.First(i => i.Id == IR.IngredientId);
+
+                // Now, iterate over every RecipeIngredient
+                foreach (RecipeIngredient RI in RecipesInDb)
+                {
+                    // if the RecipeIngredientID does not match the set ingredient's id
+                    if (RI.IngredientId != ingredient.Id)
+                    {
+                        // add that recipe to the recipeIngredients
+                        recipeIngredients.Add(RI);
+                        RecipesInDb.Remove(RI);
+                    }
+                }
+            }
+
+            filteredRecipes = _appStorage.Recipes.Where(r => recipeIngredients.Any(ri => ri.RecipeId == r.Id)).ToHashSet();
+
+            return filteredRecipes;
         }
     }
 }

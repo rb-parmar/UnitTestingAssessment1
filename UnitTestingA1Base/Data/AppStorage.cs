@@ -25,7 +25,7 @@ namespace UnitTestingA1Base.Data
         public AppStorage ()
         {
             
-        Recipes = new HashSet<Recipe>
+            Recipes = new HashSet<Recipe>
         {
             new Recipe
             {
