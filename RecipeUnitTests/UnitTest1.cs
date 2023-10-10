@@ -10,6 +10,7 @@ namespace RecipeUnitTests
         {
             return new BusinessLogicLayer(new AppStorage());
         }
+
         [TestMethod]
         public void GetRecipesByIngredient_ValidId_ReturnsRecipesWithIngredient()
         {

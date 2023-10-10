@@ -107,8 +107,81 @@ app.MapGet("/recipes", (string? name, int? id) =>
 /// 
 /// All IDs should be created for these objects using the returned value of the AppStorage.GeneratePrimaryKey() method
 /// </summary>
-app.MapPost("/recipes", () => {
+app.MapPost("/recipes", (string recipeName, string recipeDescription, int servings, string ingredientName, double amount, MeasurementUnit measurementUnit) => {
+    try
+    {
+        if (recipeName == null || recipeDescription == null || ingredientName == null)
+        {
+            throw new ArgumentNullException($"Parameters cannot be null.");
+        }
 
+        if (amount <= 0 || servings <= 0)
+        {
+            throw new ArgumentOutOfRangeException("Specified parameter has to be greater than 0.");
+        }
+
+        if (measurementUnit != MeasurementUnit.Grams && measurementUnit != MeasurementUnit.Milliletres)
+        {
+            throw new ArgumentOutOfRangeException(nameof(measurementUnit));
+        }
+
+        Recipe newRecipe = new Recipe();
+
+        if (!appStorage.Recipes.Any(r => r.Name == recipeName))
+        {
+            newRecipe.Id = appStorage.GeneratePrimaryKey();
+            newRecipe.Name = recipeName;
+            newRecipe.Description = recipeDescription;
+            newRecipe.Servings = servings;
+
+            appStorage.Recipes.Add(newRecipe);
+        } else
+        {
+            throw new InvalidOperationException("Recipe name already exists in the database.");
+        }
+
+        Ingredient newIngredient = new Ingredient();
+
+        Ingredient? existingIngredient = new Ingredient();
+
+        if (!appStorage.Ingredients.Any(i => i.Name == ingredientName))
+        {
+            newIngredient.Id = appStorage.GeneratePrimaryKey();
+            newIngredient.Name = ingredientName;
+
+            appStorage.Ingredients.Add(newIngredient);
+        }  else
+        {
+            existingIngredient = appStorage.Ingredients.FirstOrDefault(i => i.Name == ingredientName);
+        }
+
+        RecipeIngredient recipeIngredient = new RecipeIngredient();
+
+        recipeIngredient.RecipeId = newRecipe.Id;
+
+        if (newIngredient.Id != 0)
+        {
+            recipeIngredient.IngredientId = newIngredient.Id;
+        } else if (existingIngredient != null) 
+        {
+            recipeIngredient.IngredientId = existingIngredient.Id;
+        }
+
+        recipeIngredient.Amount = amount;
+        recipeIngredient.MeasurementUnit = measurementUnit;
+
+        appStorage.RecipeIngredients.Add(recipeIngredient);
+
+        return Results.Ok("Recipe successfully added to the database.");
+
+    }catch (InvalidOperationException ex)
+    {
+        return Results.Problem(ex.Message);
+    } 
+    catch (Exception ex)
+    {
+        return Results.NotFound(ex.Message);
+    }
 });
 
 ///<summary>
@@ -122,7 +195,7 @@ app.MapDelete("/ingredients", (int id, string name) =>
 });
 
 /// <summary>
-/// Deletes the requested recipe from the database
+/// Deletes the requested newRecipe from the database
 /// This should also delete the associated IngredientRecipe objects from the database
 /// </summary>
 app.MapDelete("/recipes", (int id, string name) =>

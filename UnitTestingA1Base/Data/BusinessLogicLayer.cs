@@ -171,7 +171,7 @@ namespace UnitTestingA1Base.Data
                 recipes = _appStorage.Recipes.Where(r => r.Id == id).ToHashSet();
             }
 
-            // search using mane and id not provided
+            // search using name and id not provided
             if (name != null && id == null)
             {
                 recipes = _appStorage.Recipes.Where(r => r.Name.Contains(name)).ToHashSet();

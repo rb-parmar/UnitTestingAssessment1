@@ -22,6 +22,7 @@ namespace UnitTestingA1Base.Data
         {
             return _idCount++;
         }
+
         public AppStorage ()
         {
             
