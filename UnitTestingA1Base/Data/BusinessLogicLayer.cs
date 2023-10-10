@@ -160,5 +160,37 @@ namespace UnitTestingA1Base.Data
 
             return filteredRecipes;
         }
+
+        public HashSet<Recipe> GetRecipes(int? id, string? name)
+        {
+            HashSet<Recipe> recipes = new HashSet<Recipe>();
+            
+            // search using id and name not provided
+            if (id != null && name == null)
+            {
+                recipes = _appStorage.Recipes.Where(r => r.Id == id).ToHashSet();
+            }
+
+            // search using mane and id not provided
+            if (name != null && id == null)
+            {
+                recipes = _appStorage.Recipes.Where(r => r.Name.Contains(name)).ToHashSet();
+            }
+
+            // search using both id and name
+            if (id != null && name != null)
+            {
+                // search using id 
+                recipes = _appStorage.Recipes.Where(r => r.Id == id).ToHashSet();
+
+                // if the recipe count is less than or equal to 0, search by name
+                if (recipes.Count <= 0)
+                {
+                    recipes = _appStorage.Recipes.Where(r => r.Name.Contains(name)).ToHashSet();
+                }
+            }
+
+            return recipes;
+        }
     }
 }
