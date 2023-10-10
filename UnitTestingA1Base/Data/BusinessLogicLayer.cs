@@ -52,8 +52,10 @@ namespace UnitTestingA1Base.Data
                 {
                     ingredient = _appStorage.Ingredients.First(i => i.Name.Contains(name));
                 
-                    // if ingredient is still null, return an empty hashset of recipies which will result in a NotFound error
-                } if (ingredient == null)
+                } 
+                
+                // if ingredient is still null, return an empty hashset of recipies which will result in a NotFound error
+                if (ingredient == null)
                 {
                     return new HashSet<Recipe>();
                 }
@@ -112,9 +114,10 @@ namespace UnitTestingA1Base.Data
                 if (dietaryRestriction == null)
                 {
                     dietaryRestriction = _appStorage.DietaryRestrictions.First(d => d.Name.Contains(name));
-
-                    // if the dietaryRestriction searched by name returned null, then return a new hashset of recipes which will return a NotFound error.
-                } if (dietaryRestriction == null) 
+                } 
+                
+                // if the dietaryRestriction searched by name returned null, then return a new hashset of recipes which will return a NotFound error.
+                if (dietaryRestriction == null) 
                 {
                     return new HashSet<Recipe>();
                 }
@@ -191,6 +194,70 @@ namespace UnitTestingA1Base.Data
             }
 
             return recipes;
+        }
+
+        public string DeleteIngredient(int? id, string? name)
+        {
+            string message = "";
+            Ingredient ingredient;
+
+            // search using id and name not provided
+            if (id != null && name == null)
+            {
+                ingredient = _appStorage.Ingredients.First(r => r.Id == id);
+
+                message = DeleteIngredientHelperMethod(ingredient);
+            }
+
+            // search using name and id not provided
+            if (id == null && name != null)
+            {
+                ingredient = _appStorage.Ingredients.First(r => r.Name.Contains(name));
+
+                message = DeleteIngredientHelperMethod(ingredient);
+            }
+
+            // search using both id and name
+            if (id != null && name != null)
+            {
+                ingredient = _appStorage.Ingredients.First(r => r.Id == id);
+
+                if (ingredient == null)
+                {
+                    ingredient = _appStorage.Ingredients.First(r => r.Name.Contains(name));
+                }
+
+                if (ingredient == null)
+                {
+                    return "Ingredient not found.";
+                }
+
+                message = DeleteIngredientHelperMethod(ingredient);
+            }
+
+            return message;
+        }
+
+        // Helper method to delete associated recipes, recipeIngredients and ingredient
+        public string DeleteIngredientHelperMethod(Ingredient ingredient)
+        {
+            string msg = "";
+
+            HashSet<RecipeIngredient> recipeIngredients = _appStorage.RecipeIngredients.Where(ri => ri.IngredientId == ingredient.Id).ToHashSet();
+
+            if (recipeIngredients.Count == 1)
+            {
+                Recipe recipe = _appStorage.Recipes.First(r => r.Id == recipeIngredients.First().RecipeId);
+
+                _appStorage.Recipes.Remove(recipe);
+                _appStorage.RecipeIngredients.Remove(recipeIngredients.First());
+                _appStorage.Ingredients.Remove(ingredient);
+            } else
+            {
+                msg = "Ingredient is associated with more than 1 recipe.";
+            }
+
+            return msg;
         }
     }
 }
