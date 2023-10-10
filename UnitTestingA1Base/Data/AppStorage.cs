@@ -24,7 +24,8 @@ namespace UnitTestingA1Base.Data
         }
         public AppStorage ()
         {
-            Recipes = new HashSet<Recipe>
+            
+        Recipes = new HashSet<Recipe>
         {
             new Recipe
             {
@@ -97,12 +98,13 @@ namespace UnitTestingA1Base.Data
                 Servings = 4
             },
             new Recipe
-        {
-            Id = 11,
-            Name = "Vegetable Stir Fry",
-            Description = "Quick and healthy stir fry with assorted vegetables.",
-            Servings = 4
-        }, new Recipe {
+            {
+                Id = 11,
+                Name = "Vegetable Stir Fry",
+                Description = "Quick and healthy stir fry with assorted vegetables.",
+                Servings = 4
+            }, 
+            new Recipe {
                 Id = 12,
                 Name = "Grilled Salmon",
                 Description = "Delicious grilled salmon fillet with lemon and herbs.",
@@ -265,14 +267,14 @@ namespace UnitTestingA1Base.Data
                 Amount = 300,
                 MeasurementUnit = MeasurementUnit.Grams
             },
-                new RecipeIngredient
-        {
-            IngredientId = 6,
-            RecipeId = 12,
-            Amount = 250,
-            MeasurementUnit = MeasurementUnit.Grams
-        },
-           new RecipeIngredient
+            new RecipeIngredient
+            {
+                IngredientId = 6,
+                RecipeId = 12,
+                Amount = 250,
+                MeasurementUnit = MeasurementUnit.Grams
+            },
+            new RecipeIngredient
             {
                 IngredientId = 7,
                 RecipeId = 12,

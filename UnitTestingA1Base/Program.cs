@@ -1,4 +1,5 @@
 #region Setup
+
 using UnitTestingA1Base.Data;
 using UnitTestingA1Base.Models;
 
@@ -11,6 +12,7 @@ app.UseHttpsRedirection();
 // Application Storage persists for single session
 AppStorage appStorage = new AppStorage();
 BusinessLogicLayer bll = new BusinessLogicLayer(appStorage);    
+
 #endregion
 
 
@@ -36,6 +38,12 @@ app.MapGet("/recipes/byIngredient", (string? name, int? id) =>
     try 
     {
         HashSet<Recipe> recipes = bll.GetRecipesByIngredient(id, name);
+
+        if (name == null && !recipes.Any())
+        {
+            return Results.NotFound();
+        }
+
         return Results.Ok(recipes);
     } catch(Exception ex)
     {
