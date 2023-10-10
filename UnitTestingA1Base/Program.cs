@@ -214,9 +214,35 @@ app.MapDelete("/ingredients", (int? id, string? name) =>
 /// Deletes the requested newRecipe from the database
 /// This should also delete the associated IngredientRecipe objects from the database
 /// </summary>
-app.MapDelete("/recipes", (int id, string name) =>
+app.MapDelete("/recipes", (int? id, string? name) =>
 {
+    try
+    {
+        if (id == null && name == null)
+        {
+            throw new ArgumentNullException();
+        }
 
+        Recipe newRecipe = new Recipe();
+
+        if (id.HasValue)
+        {
+            newRecipe.Id = id.Value;
+        }
+
+        if (!string.IsNullOrEmpty(name))
+        {
+            newRecipe.Name = name;
+        }
+
+        bll.DeleteRecipe(newRecipe);
+
+        return Results.Ok("Recipe deleted successfully.");
+
+    } catch (Exception ex)
+    {
+        return Results.Problem(ex.Message);
+    }
 });
 
 #endregion
