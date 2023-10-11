@@ -42,6 +42,22 @@ namespace RecipeUnitTests
             Assert.AreEqual(recipesExpected, recipes.Count);
         }
 
+        [TestMethod]
+        public void GetRecipesByIngredient_ValidIdAndName_ReturnsRecipesWithIngredients()
+        {
+            // arrange
+            BusinessLogicLayer bll = _initializeBusinessLogic();
+            int ingredientId = 9;
+            string ingredientName = "Cocoa Powder";
+            int recipesExpected = 2;
+
+            // act
+            HashSet<Recipe> recipes = bll.GetRecipesByIngredient(ingredientId, ingredientName);
+
+            // assert
+            Assert.AreEqual(recipesExpected, recipes.Count);
+        }
+
         
         #endregion
     }
