@@ -73,6 +73,35 @@ namespace RecipeUnitTests
             Assert.AreEqual(recipesExpected, recipes.Count);
 
         }
+
+        [TestMethod]
+        public void GetRecipesByIngredients_InvalidName_ReturnsNull()
+        {
+            BusinessLogicLayer bll = _initializeBusinessLogic();
+            string ingredientName = "Boba";
+            int recipesExpected = 0;
+
+            //act
+            HashSet<Recipe> recipes = bll.GetRecipesByIngredient(null, ingredientName);
+
+            //assert
+            Assert.AreEqual(recipesExpected, recipes.Count);
+        }
+
+        [TestMethod]
+        public void GetRecipesByIngredients_InvalidIdAndName_ReturnsNull()
+        {
+            BusinessLogicLayer bll = _initializeBusinessLogic();
+            int recipesExpected = 0;
+
+            //act
+            HashSet<Recipe> recipes = bll.GetRecipesByIngredient(null, null);
+
+            //assert
+            Assert.AreEqual(recipesExpected, recipes.Count);
+        }
+
+
         #endregion
     }
 }
