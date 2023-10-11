@@ -58,7 +58,21 @@ namespace RecipeUnitTests
             Assert.AreEqual(recipesExpected, recipes.Count);
         }
 
-        
+        [TestMethod]
+        public void GetRecipesByIngredient_InvalidId_ReturnsNull()
+        {
+            // arrange
+            BusinessLogicLayer bll = _initializeBusinessLogic();
+            int ingredientId = 19;
+            int recipesExpected = 0;
+
+            //act
+            HashSet<Recipe> recipes = bll.GetRecipesByIngredient(ingredientId, null);
+
+            //assert
+            Assert.AreEqual(recipesExpected, recipes.Count);
+
+        }
         #endregion
     }
 }
