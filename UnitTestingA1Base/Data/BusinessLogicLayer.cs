@@ -11,13 +11,13 @@ namespace UnitTestingA1Base.Data
         }
         public HashSet<Recipe> GetRecipesByIngredient(int? id, string? name)
         {
-            Ingredient ingredient;
+            Ingredient? ingredient;
             HashSet<Recipe> recipes = new HashSet<Recipe>();
 
             // search using ID and name not provided
             if (id != null && name == null)
             {
-                ingredient = _appStorage.Ingredients.First(i => i.Id == id);
+                ingredient = _appStorage.Ingredients.FirstOrDefault(i => i.Id == id);
 
                 // if ingredient is null, then return an empty hashset which will result in a NotFound error
                 if (ingredient == null)
