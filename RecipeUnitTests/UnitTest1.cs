@@ -416,5 +416,45 @@ namespace RecipeUnitTests
             });
         }
         #endregion
+
+        #region DeleteIngredientHelperMethod
+        [TestMethod]
+        public void DeleteIngredientHelperMethod_OneRecipeAssociated_ReturnsNullMessage()
+        {
+            // arrange
+            BusinessLogicLayer bll = _initializeBusinessLogic();
+            Ingredient ingredient = new Ingredient
+            {
+                Id = 4,
+                Name = "Tomatoes"
+            };
+            string? ExpectedMsg = null;
+
+            // act
+            bll.DeleteIngredientHelperMethod(ingredient);
+
+            //assert
+            Assert.IsNull(ExpectedMsg);
+        }
+
+        [TestMethod]
+        public void DeleteIngredientHelperMethod_ManyRecipesAssociated_ReturnsForbiddenMessage()
+        {
+            // arrange
+            BusinessLogicLayer bll = _initializeBusinessLogic();
+            Ingredient ingredient = new Ingredient
+            {
+                Id = 6,
+                Name = "Salmon"
+            };
+            string ExpectedMsg = "Ingredient is associated with more than 1 recipe.";
+
+            // act
+            string actualMsg = bll.DeleteIngredientHelperMethod(ingredient);
+
+            //assert
+            Assert.AreEqual(ExpectedMsg, actualMsg);
+        }
+        #endregion
     }
 }
