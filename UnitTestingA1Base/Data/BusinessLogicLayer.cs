@@ -200,37 +200,49 @@ namespace UnitTestingA1Base.Data
         public string? DeleteIngredient(int? id, string? name)
         {
             string? message = null;
-            Ingredient ingredient;
+            Ingredient? ingredient;
 
             // search using id and name not provided
             if (id != null && name == null)
             {
-                ingredient = _appStorage.Ingredients.First(r => r.Id == id);
+                ingredient = _appStorage.Ingredients.FirstOrDefault(r => r.Id == id);
 
-                message = DeleteIngredientHelperMethod(ingredient);
+                if (ingredient == null)
+                {
+                    throw new ArgumentNullException();
+                } else
+                {
+                    message = DeleteIngredientHelperMethod(ingredient);
+                }
             }
 
             // search using name and id not provided
             if (id == null && name != null)
             {
-                ingredient = _appStorage.Ingredients.First(r => r.Name.Contains(name));
+                ingredient = _appStorage.Ingredients.FirstOrDefault(r => r.Name.Contains(name));
 
-                message = DeleteIngredientHelperMethod(ingredient);
+                if (ingredient == null)
+                {
+                    throw new ArgumentNullException();
+                } else
+                {
+                    message = DeleteIngredientHelperMethod(ingredient);
+                }
             }
 
             // search using both id and name
             if (id != null && name != null)
             {
-                ingredient = _appStorage.Ingredients.First(r => r.Id == id);
+                ingredient = _appStorage.Ingredients.FirstOrDefault(r => r.Id == id);
 
                 if (ingredient == null)
                 {
-                    ingredient = _appStorage.Ingredients.First(r => r.Name.Contains(name));
+                    ingredient = _appStorage.Ingredients.FirstOrDefault(r => r.Name.Contains(name));
                 }
 
                 if (ingredient == null)
                 {
-                    return "Ingredient not found.";
+                    throw new ArgumentNullException();
                 }
 
                 message = DeleteIngredientHelperMethod(ingredient);

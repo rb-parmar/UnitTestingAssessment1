@@ -203,7 +203,11 @@ app.MapDelete("/ingredients", (int? id, string? name) =>
             throw new Exception(message);
         }
 
-    } catch (Exception ex) 
+    } catch (ArgumentNullException ex)
+    {
+        return Results.NotFound(ex);
+    } 
+    catch (Exception ex) 
     {
         return Results.Problem(ex.Message, "", 403);
     }

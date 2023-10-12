@@ -323,7 +323,39 @@ namespace RecipeUnitTests
 
             // assert
             Assert.AreEqual(recipesExpected, recipesOutput.Count);
-        }       
+        }
+        #endregion
+
+        #region DeleteIngredient
+        [TestMethod]
+        public void DeleteIngredient_ValidId_ReturnsNullString()
+        {
+            // arrange
+            BusinessLogicLayer bll = _initializeBusinessLogic();
+            int ingredientId = 4;
+            string? expectedMsg = null;
+
+            // act 
+            string? actualMsg = bll.DeleteIngredient(ingredientId, null);
+
+            //assert
+            Assert.AreEqual(expectedMsg, actualMsg);
+        }
+
+        [TestMethod]
+        public void DeleteIngredient_ValidName_ReturnsNullString()
+        {
+            // arrange
+            BusinessLogicLayer bll = _initializeBusinessLogic();
+            string ingredientName = "Tomatoes";
+            string? expectedMsg = null;
+
+            // act 
+            string? actualMsg = bll.DeleteIngredient(null, ingredientName);
+
+            //assert
+            Assert.AreEqual(expectedMsg, actualMsg);
+        }
         #endregion
     }
 }
