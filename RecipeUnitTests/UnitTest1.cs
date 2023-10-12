@@ -231,5 +231,23 @@ namespace RecipeUnitTests
             Assert.AreEqual(recipesExpected, bll.FilterRecipesByDiet(dietaryRestriction).Count);
         }
         #endregion
+
+        #region GetRecipes
+        [TestMethod]
+        public void GetRecipes_ValidId_ReturnsRecipe()
+        {
+            // arrange
+            BusinessLogicLayer bll = _initializeBusinessLogic();
+            int recipeId = 2;
+            int recipesExpected = 1;
+
+            // act 
+            HashSet<Recipe> recipesOutput = bll.GetRecipes(recipeId, null);
+
+            // assert
+            Assert.AreEqual(recipesExpected, recipesOutput.Count);
+        }
+
+        #endregion
     }
 }
