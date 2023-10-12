@@ -77,6 +77,7 @@ namespace RecipeUnitTests
         [TestMethod]
         public void GetRecipesByIngredients_InvalidName_ReturnsNull()
         {
+            //arrange
             BusinessLogicLayer bll = _initializeBusinessLogic();
             string ingredientName = "Boba";
             int recipesExpected = 0;
@@ -91,6 +92,7 @@ namespace RecipeUnitTests
         [TestMethod]
         public void GetRecipesByIngredients_InvalidIdAndName_ReturnsNull()
         {
+            // arrange
             BusinessLogicLayer bll = _initializeBusinessLogic();
             int recipesExpected = 0;
 
@@ -100,8 +102,44 @@ namespace RecipeUnitTests
             //assert
             Assert.AreEqual(recipesExpected, recipes.Count);
         }
+        #endregion
+
+        #region FilterRecipesByIngredient
+
+        [TestMethod]
+        public void FilterRecipesByIngredient_ValidIngredient_ReturnsHashSetOfRecipeIngredients() 
+        {
+            // arrange
+            BusinessLogicLayer bll = _initializeBusinessLogic();
+            Ingredient ingredient = new Ingredient
+            {
+                Id = 1,
+                Name = "Spaghetti"
+            };
+            int recipesExpected = 1;
 
 
+
+            // act and assert
+            Assert.AreEqual(recipesExpected, bll.FilterRecipesByIngredient(ingredient).Count);
+        }
+
+        #endregion
+
+        #region GetRecipesByDiet
+        [TestMethod]
+        public void GetRecipesByDiet_ValidId_ReturnsRecipesWithIngredients()
+        {
+            BusinessLogicLayer bll = _initializeBusinessLogic();
+            int dietRestrictionId = 4;
+            int recipesExpected = 9;
+
+            // act
+            HashSet<Recipe> recipes = bll.GetRecipesByDiet(dietRestrictionId, null);
+
+            //assert
+            Assert.AreEqual(recipesExpected, recipes.Count);
+        }
         #endregion
     }
 }

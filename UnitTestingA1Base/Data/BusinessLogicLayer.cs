@@ -70,18 +70,20 @@ namespace UnitTestingA1Base.Data
         {
             HashSet<RecipeIngredient> recipeIngredients = _appStorage.RecipeIngredients.Where(rI => rI.IngredientId == ingredient.Id).ToHashSet();
 
-            return _appStorage.Recipes.Where(r => recipeIngredients.Any(ri => ri.RecipeId == r.Id)).ToHashSet();
+            HashSet<Recipe> recipes = _appStorage.Recipes.Where(r => recipeIngredients.Any(ri => ri.RecipeId == r.Id)).ToHashSet();
+
+            return recipes;
         }
 
         public HashSet<Recipe> GetRecipesByDiet(int? id, string? name)
         {
-            DietaryRestriction dietaryRestriction;
+            DietaryRestriction? dietaryRestriction;
             HashSet<Recipe> recipes = new HashSet<Recipe>();
 
             // search using ID and name not provided
             if (id != null && name == null)
             {
-                dietaryRestriction = _appStorage.DietaryRestrictions.First(i => i.Id == id);
+                dietaryRestriction = _appStorage.DietaryRestrictions.FirstOrDefault(i => i.Id == id);
 
                 if (dietaryRestriction == null)
                 {
@@ -94,7 +96,7 @@ namespace UnitTestingA1Base.Data
             // search using ID and name not provided
             if (name != null && id == null)
             {
-                dietaryRestriction = _appStorage.DietaryRestrictions.First(i => i.Name.Contains(name));
+                dietaryRestriction = _appStorage.DietaryRestrictions.FirstOrDefault(i => i.Name.Contains(name));
 
                 if (dietaryRestriction == null)
                 {
@@ -107,12 +109,12 @@ namespace UnitTestingA1Base.Data
             // search using both ID and name
             if (id != null && name != null) 
             {
-                dietaryRestriction = _appStorage.DietaryRestrictions.First(d => d.Id == id);
+                dietaryRestriction = _appStorage.DietaryRestrictions.FirstOrDefault(d => d.Id == id);
                 
                 // if dietaryRestriction searched by id returned null, then search by name
                 if (dietaryRestriction == null)
                 {
-                    dietaryRestriction = _appStorage.DietaryRestrictions.First(d => d.Name.Contains(name));
+                    dietaryRestriction = _appStorage.DietaryRestrictions.FirstOrDefault(d => d.Name.Contains(name));
                 } 
                 
                 // if the dietaryRestriction searched by name returned null, then return a new hashset of recipes which will return a NotFound error.
