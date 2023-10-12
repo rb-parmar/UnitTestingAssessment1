@@ -185,6 +185,20 @@ namespace RecipeUnitTests
         }
 
         [TestMethod]
+        public void GetRecipesByDiet_InvalidName_ReturnsNull()
+        {
+            BusinessLogicLayer bll = _initializeBusinessLogic();
+            string dietRestrictionName = "No-Restriction";
+            int recipesExpected = 0;
+
+            // act
+            HashSet<Recipe> recipes = bll.GetRecipesByDiet(null, dietRestrictionName);
+
+            //assert
+            Assert.AreEqual(recipesExpected, recipes.Count);
+        }
+
+        [TestMethod]
         public void GetRecipesByDiet_InvalidIdAndValidName_ReturnsRecipesWithIngredients()
         {
             BusinessLogicLayer bll = _initializeBusinessLogic();
