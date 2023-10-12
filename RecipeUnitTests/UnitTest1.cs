@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 using UnitTestingA1Base.Data;
 using UnitTestingA1Base.Models;
 
@@ -454,6 +455,53 @@ namespace RecipeUnitTests
 
             //assert
             Assert.AreEqual(ExpectedMsg, actualMsg);
+        }
+        #endregion
+
+        #region DeleteRecipe
+        [TestMethod]
+        public void DeleteRecipe_ValidId_DeletesRecipe()
+        {
+            BusinessLogicLayer bll = _initializeBusinessLogic();
+            Recipe recipe = new Recipe
+            {
+                Id = 1,
+            };
+            string expectedMsg = "Recipe deleted successfully";
+
+            string actualMsg = bll.DeleteRecipe(recipe);
+
+            Assert.AreEqual(expectedMsg, actualMsg);
+        }
+
+        [TestMethod]
+        public void DeleteRecipe_ValidName_DeletesRecipe()
+        {
+            BusinessLogicLayer bll = _initializeBusinessLogic();
+            Recipe recipe = new Recipe
+            {
+                Name = "Spaghetti Carbonara",
+            };
+            string expectedMsg = "Recipe deleted successfully";
+
+            string actualMsg = bll.DeleteRecipe(recipe);
+
+            Assert.AreEqual(expectedMsg, actualMsg);
+        }
+
+        [TestMethod]
+        public void DeleteRecipe_InValidIdAndInvalidName_ThrowsArgumentNullException()
+        {
+            BusinessLogicLayer bll = _initializeBusinessLogic();
+            Recipe recipe = new Recipe
+            {
+                Id = 5416,
+                Name = "sdvksklvndsvb",
+                Description = "Classic Roman pasta dish with eggs, cheese, and pancetta.",
+                Servings = 2
+            };
+
+            Assert.ThrowsException<ArgumentNullException>(() => bll.DeleteRecipe(recipe));
         }
         #endregion
     }

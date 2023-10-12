@@ -239,11 +239,15 @@ app.MapDelete("/recipes", (int? id, string? name) =>
             newRecipe.Name = name;
         }
 
-        bll.DeleteRecipe(newRecipe);
+        string msg = bll.DeleteRecipe(newRecipe);
 
-        return Results.Ok("Recipe deleted successfully.");
+        return Results.Ok(msg);
 
-    } catch (Exception ex)
+    } catch (ArgumentNullException ex)
+    {
+        return Results.NotFound(ex.Message);
+    } 
+    catch (Exception ex)
     {
         return Results.Problem(ex.Message);
     }

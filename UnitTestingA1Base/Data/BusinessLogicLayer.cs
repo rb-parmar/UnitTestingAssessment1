@@ -273,26 +273,38 @@ namespace UnitTestingA1Base.Data
             return msg;
         }
 
-        public void DeleteRecipe(Recipe newRecipe)
+        public string DeleteRecipe(Recipe newRecipe)
         {
-            Recipe recipe = new Recipe();
+            Recipe? recipe = new Recipe();
 
             if (newRecipe.Id != 0)
             {
-                recipe = _appStorage.Recipes.First(r => r.Id == newRecipe.Id);
-            } else if (newRecipe.Name != null)
+                recipe = _appStorage.Recipes.FirstOrDefault(r => r.Id == newRecipe.Id);
+
+                if (recipe == null && newRecipe.Name != null)
+                {
+                    recipe = _appStorage.Recipes.FirstOrDefault(r => r.Name.Contains(newRecipe.Name));
+                }
+            }
+            
+            if (recipe == null)
             {
-                recipe = _appStorage.Recipes.First(r => r.Name.Contains(newRecipe.Name));
+                throw new ArgumentNullException(nameof(recipe));
             }
 
             HashSet<RecipeIngredient> recipeIngredients = _appStorage.RecipeIngredients.Where(ri => ri.RecipeId  == recipe.Id).ToHashSet();
 
-            foreach (RecipeIngredient RI in recipeIngredients)
+            if (recipeIngredients.Count > 1)
             {
-                _appStorage.RecipeIngredients.Remove(RI);
+                foreach (RecipeIngredient RI in recipeIngredients)
+                {
+                    _appStorage.RecipeIngredients.Remove(RI);
+                }
             }
 
             _appStorage.Recipes.Remove(recipe);
+
+            return "Recipe deleted successfully";
         }
     }
 }
