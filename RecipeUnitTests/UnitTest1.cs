@@ -356,6 +356,65 @@ namespace RecipeUnitTests
             //assert
             Assert.AreEqual(expectedMsg, actualMsg);
         }
+
+        [TestMethod]
+        public void DeleteIngredient_InvalidIdAndValidName_ReturnsNullString()
+        {
+            // arrange
+            BusinessLogicLayer bll = _initializeBusinessLogic();
+            int ingredientId = 5436;
+            string ingredientName = "Tomatoes";
+            string? expectedMsg = null;
+
+            // act 
+            string? actualMsg = bll.DeleteIngredient(ingredientId, ingredientName);
+
+            //assert
+            Assert.AreEqual(expectedMsg, actualMsg);
+        }
+
+        [TestMethod]
+        public void DeleteIngredient_InvalidId_ThrowsArgumentNullExcemption()
+        {
+            // arrange
+            BusinessLogicLayer bll = _initializeBusinessLogic();
+            int ingredientId = 5436;
+
+            //act and assert
+            Assert.ThrowsException<ArgumentNullException>(() =>
+            {
+                bll.DeleteIngredient(ingredientId, null);
+            });
+        }
+
+        [TestMethod]
+        public void DeleteIngredient_InvalidName_ThrowsArgumentNullExcemption()
+        {
+            // arrange
+            BusinessLogicLayer bll = _initializeBusinessLogic();
+            string ingredientName = "Roma tomatoes";
+
+            //act and assert
+            Assert.ThrowsException<ArgumentNullException>(() =>
+            {
+                bll.DeleteIngredient(null, ingredientName);
+            });
+        }
+
+        [TestMethod]
+        public void DeleteIngredient_InvalidIdAndInvalidName_ThrowsArgumentNullExcemption()
+        {
+            // arrange
+            BusinessLogicLayer bll = _initializeBusinessLogic();
+            int ingredientId = 5436;
+            string ingredientName = "Roma tomatoes";
+
+            //act and assert
+            Assert.ThrowsException<ArgumentNullException>(() =>
+            {
+                bll.DeleteIngredient(ingredientId, ingredientName);
+            });
+        }
         #endregion
     }
 }
