@@ -169,6 +169,35 @@ namespace RecipeUnitTests
             //assert
             Assert.AreEqual(recipesExpected, recipes.Count);
         }
+
+        [TestMethod]
+        public void GetRecipesByDiet_InvalidId_ReturnsNull()
+        {
+            BusinessLogicLayer bll = _initializeBusinessLogic();
+            int dietRestrictionId = 87;
+            int recipesExpected = 0;
+
+            // act
+            HashSet<Recipe> recipes = bll.GetRecipesByDiet(dietRestrictionId, null);
+
+            //assert
+            Assert.AreEqual(recipesExpected, recipes.Count);
+        }
+
+        [TestMethod]
+        public void GetRecipesByDiet_InvalidIdAndValidName_ReturnsRecipesWithIngredients()
+        {
+            BusinessLogicLayer bll = _initializeBusinessLogic();
+            int dietRestrictionId = 99;
+            string dietRestrictionName = "Nut-Free";
+            int recipesExpected = 9;
+
+            // act
+            HashSet<Recipe> recipes = bll.GetRecipesByDiet(dietRestrictionId, dietRestrictionName);
+
+            //assert
+            Assert.AreEqual(recipesExpected, recipes.Count);
+        }
         #endregion
     }
 }
