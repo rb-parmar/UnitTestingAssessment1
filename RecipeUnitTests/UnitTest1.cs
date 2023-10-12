@@ -248,6 +248,20 @@ namespace RecipeUnitTests
             Assert.AreEqual(recipesExpected, recipesOutput.Count);
         }
 
+        [TestMethod]
+        public void GetRecipes_ValidName_ReturnsRecipe()
+        {
+            // arrange
+            BusinessLogicLayer bll = _initializeBusinessLogic();
+            string recipeName = "Chicken Alfredo";
+            int recipesExpected = 1;
+
+            // act
+            HashSet<Recipe> recipesOutput = bll.GetRecipes(null, recipeName);
+
+            // assert
+            Assert.AreEqual(recipesExpected, recipesOutput.Count);
+        }
         #endregion
     }
 }
