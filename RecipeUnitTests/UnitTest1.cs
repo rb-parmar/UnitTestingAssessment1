@@ -295,7 +295,20 @@ namespace RecipeUnitTests
             Assert.AreEqual(recipesExpected, recipesOutput.Count);
         }
 
-        
+        [TestMethod]
+        public void GetRecipes_InvalidId_ReturnsNull()
+        {
+            // arrange
+            BusinessLogicLayer bll = _initializeBusinessLogic();
+            int recipeId = 521;
+            int recipesExpected = 0;
+
+            // act
+            HashSet<Recipe> recipesOutput = bll.GetRecipes(recipeId, null);
+
+            // assert
+            Assert.AreEqual(recipesExpected, recipesOutput.Count);
+        }
         #endregion
     }
 }
