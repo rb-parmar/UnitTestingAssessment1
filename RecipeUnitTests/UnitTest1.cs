@@ -213,5 +213,23 @@ namespace RecipeUnitTests
             Assert.AreEqual(recipesExpected, recipes.Count);
         }
         #endregion
+
+        #region FilterRecipesByDiet
+        [TestMethod]
+        public void FilterRecipesByDiet_ValidDietRestriction_ReturnsRecipesWithoutDietRestriction()
+        {
+            BusinessLogicLayer bll = _initializeBusinessLogic();
+            DietaryRestriction dietaryRestriction = new DietaryRestriction
+            {
+                Id = 4,
+                Name = "Nut-Free"
+            };
+            int recipesExpected = 9;
+
+
+            // act and assert
+            Assert.AreEqual(recipesExpected, bll.FilterRecipesByDiet(dietaryRestriction).Count);
+        }
+        #endregion
     }
 }
